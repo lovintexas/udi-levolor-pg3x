@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-import time
 import hashlib
 import udi_interface
 from motionblinds import MotionGateway
@@ -166,20 +165,7 @@ class Controller(udi_interface.Node):
     }
 
 
-def start_handler():
-    global controller
 
-    LOGGER.info('Levolor plugin starting')
-
-    if controller is None:
-        controller = Controller(
-            polyglot,
-            'controller',
-            'controller',
-            'Levolor Controller'
-        )
-
-        polyglot.addNode(controller)
 def custom_params_handler(params):
     global controller
 
