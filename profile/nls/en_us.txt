@@ -1,0 +1,12 @@
+ND-levolorctrl-NAME=Levolor Controller
+ND-levolorblind-NAME=Levolor Blind
+
+ST-ST-NAME=Position
+ST-GV1-NAME=Battery
+ST-GV2-NAME=RSSI
+ST-GV3-NAME=Available
+
+CMD-QUERY-NAME=Query
+CMD-SET_POS-NAME=Set Position
+CMDP-percent:value=Position
+CMDP-percent-value-NAME=Target Position

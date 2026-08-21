@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nodeDefs>
+
+  <nodeDef id="levolorctrl" nls="levolorctrl">
+    <sts>
+      <st id="ST" editor="bool"/>
+    </sts>
+    <cmds>
+      <sends/>
+      <accepts>
+        <cmd id="QUERY"/>
+      </accepts>
+    </cmds>
+  </nodeDef>
+
+  <nodeDef id="levolorblind" nls="levolorblind">
+    <sts>
+      <st id="ST" editor="percent"/>
+      <st id="GV1" editor="percent"/>
+      <st id="GV2" editor="rssi"/>
+      <st id="GV3" editor="bool"/>
+    </sts>
+
+    <cmds>
+      <sends/>
+
+      <accepts>
+        <cmd id="SET_POS">
+          <p id="value" editor="percent" init="ST"/>
+        </cmd>
+        <cmd id="QUERY"/>
+      </accepts>
+    </cmds>
+  </nodeDef>
+
+</nodeDefs>
