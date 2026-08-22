@@ -31,7 +31,7 @@ The gateway key will look similar to:
 
 After entering both values, click **Save** on the Configuration page.
 
-Then restart the plugin. The controller should connect to the gateway and the blinds should be discovered automatically.
+The controller should connect to the gateway and the blinds should be discovered automatically. If the blinds do not appear, restart the plugin.
 
 The discovered blinds may be renamed as desired in the IoX Admin Console.
 
