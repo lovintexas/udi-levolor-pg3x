@@ -2,6 +2,7 @@
 
 import sys
 import hashlib
+import threading
 import os
 import markdown2
 import udi_interface
@@ -11,6 +12,7 @@ LOGGER = udi_interface.LOGGER
 
 polyglot = udi_interface.Interface([])
 controller = None
+poll_lock = threading.Lock()
 
 
 class BlindNode(udi_interface.Node):
@@ -214,8 +216,17 @@ def poll_handler(poll_type):
     if controller is None:
         return
 
-    if poll_type == 'shortPoll':
+    if poll_type != 'shortPoll':
+        return
+
+    if not poll_lock.acquire(blocking=False):
+        LOGGER.warning('Previous blind poll still running; skipping this poll')
+        return
+
+    try:
         controller.query()
+    finally:
+        poll_lock.release()
 
 
 def stop_handler():
