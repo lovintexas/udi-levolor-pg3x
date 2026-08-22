@@ -2,6 +2,8 @@
 
 import sys
 import hashlib
+import os
+import markdown2
 import udi_interface
 from motionblinds import MotionGateway
 
@@ -215,6 +217,11 @@ if __name__ == '__main__':
             polyglot.STOP,
             stop_handler
         )
+
+        configuration_help = './configdoc.md'
+        if os.path.isfile(configuration_help):
+            cfgdoc = markdown2.markdown_path(configuration_help)
+            polyglot.setCustomParamsDoc(cfgdoc)
 
         polyglot.ready()
         polyglot.updateProfile()
