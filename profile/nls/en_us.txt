@@ -11,3 +11,6 @@ CMD-SET_POS-NAME=Set Position
 CMDP-percent-value-NAME=Target Position
 ND-levolorblind-ICON=GenericCtl
 ND-levolorctrl-ICON=GenericCtl
+CMD-OPEN-NAME=Open
+CMD-CLOSE-NAME=Close
+CMD-STOP-NAME=Stop

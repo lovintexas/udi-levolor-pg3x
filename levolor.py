@@ -70,10 +70,34 @@ class BlindNode(udi_interface.Node):
             LOGGER.error(f'Error setting {self.name}: {err}')
 
 
+    def open_blind(self, command=None):
+        try:
+            LOGGER.info(f'Opening {self.name}')
+            self.blind.Open()
+        except Exception as err:
+            LOGGER.error(f'Error opening {self.name}: {err}')
+
+    def close_blind(self, command=None):
+        try:
+            LOGGER.info(f'Closing {self.name}')
+            self.blind.Close()
+        except Exception as err:
+            LOGGER.error(f'Error closing {self.name}: {err}')
+
+    def stop_blind(self, command=None):
+        try:
+            LOGGER.info(f'Stopping {self.name}')
+            self.blind.Stop()
+        except Exception as err:
+            LOGGER.error(f'Error stopping {self.name}: {err}')
+
     def query(self, command=None):
         self.update_status()
 
     commands = {
+        'OPEN': open_blind,
+        'CLOSE': close_blind,
+        'STOP': stop_blind,
         'SET_POS': set_position,
         'QUERY': query,
     }

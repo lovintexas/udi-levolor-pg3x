@@ -25,6 +25,9 @@
       <sends/>
 
       <accepts>
+        <cmd id="OPEN"/>
+        <cmd id="CLOSE"/>
+        <cmd id="STOP"/>
         <cmd id="SET_POS">
           <p id="value" editor="percent" init="ST"/>
         </cmd>
