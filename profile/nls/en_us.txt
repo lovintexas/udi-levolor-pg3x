@@ -9,3 +9,5 @@ ST-GV3-NAME=Available
 CMD-QUERY-NAME=Query
 CMD-SET_POS-NAME=Set Position
 CMDP-percent-value-NAME=Target Position
+ND-levolorblind-ICON=GenericCtl
+ND-levolorctrl-ICON=GenericCtl
