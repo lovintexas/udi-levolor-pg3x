@@ -13,4 +13,9 @@
     <range uom="56" min="-150" max="0" step="1"/>
   </editor>
 
+
+  <editor id="connectionstate">
+    <range uom="25" subset="0-1" nls="CONNECTIONSTATE"/>
+  </editor>
+
 </editors>

@@ -14,3 +14,6 @@ ND-levolorctrl-ICON=GenericCtl
 CMD-OPEN-NAME=Open
 CMD-CLOSE-NAME=Close
 CMD-STOP-NAME=Stop
+
+CONNECTIONSTATE-0 = Not Connected
+CONNECTIONSTATE-1 = Connected

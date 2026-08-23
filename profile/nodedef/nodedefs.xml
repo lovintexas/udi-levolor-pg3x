@@ -3,7 +3,7 @@
 
   <nodeDef id="levolorctrl" nls="levolorctrl">
     <sts>
-      <st id="ST" editor="bool"/>
+      <st id="ST" editor="connectionstate"/>
     </sts>
     <cmds>
       <sends/>
