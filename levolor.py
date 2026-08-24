@@ -110,7 +110,7 @@ class Controller(udi_interface.Node):
     id = 'levolorctrl'
 
     drivers = [
-        {'driver': 'ST', 'value': 0, 'uom': 2},
+        {'driver': 'ST', 'value': 0, 'uom': 25},
     ]
 
     def __init__(self, polyglot, primary, address, name):
