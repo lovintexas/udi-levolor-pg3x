@@ -19,7 +19,7 @@ class BlindNode(udi_interface.Node):
     id = 'levolorblind'
 
     drivers = [
-        {'driver': 'ST',  'value': 0, 'uom': 51},
+        {'driver': 'GV4', 'value': 0, 'uom': 51},
         {'driver': 'GV1', 'value': 0, 'uom': 51},
         {'driver': 'GV2', 'value': 0, 'uom': 56},
         {'driver': 'GV3', 'value': 0, 'uom': 2},
@@ -34,7 +34,7 @@ class BlindNode(udi_interface.Node):
             self.blind.Update()
 
             if self.blind.position is not None:
-                self.setDriver('ST', self.blind.position)
+                self.setDriver('GV4', self.blind.position)
 
             if self.blind.battery_level is not None:
                 self.setDriver('GV1', self.blind.battery_level)

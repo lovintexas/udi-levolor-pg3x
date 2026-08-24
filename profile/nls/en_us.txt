@@ -1,10 +1,11 @@
 ND-levolorctrl-NAME=Levolor Controller
 ND-levolorblind-NAME=Levolor Blind
 
-ST-ST-NAME=Position
+ST-ST-NAME=Status
 ST-GV1-NAME=Battery
 ST-GV2-NAME=RSSI
 ST-GV3-NAME=Available
+ST-GV4-NAME=Position
 
 CMD-QUERY-NAME=Query
 CMD-SET_POS-NAME=Set Position
