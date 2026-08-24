@@ -9,6 +9,7 @@ import udi_interface
 from motionblinds import MotionGateway
 
 LOGGER = udi_interface.LOGGER
+VERSION = "1.0.2"
 
 polyglot = udi_interface.Interface([])
 controller = None
@@ -236,7 +237,7 @@ def stop_handler():
 
 if __name__ == '__main__':
     try:
-        polyglot.start()
+        polyglot.start(VERSION)
 
         polyglot.subscribe(
             polyglot.CUSTOMPARAMS,
