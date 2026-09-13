@@ -3,18 +3,20 @@
 import sys
 import hashlib
 import threading
+import time
 import os
 import markdown2
 import udi_interface
 from motionblinds import MotionGateway
 
 LOGGER = udi_interface.LOGGER
-VERSION = "1.0.4"
+VERSION = "1.0.5"
 
 polyglot = udi_interface.Interface([])
 controller = None
 poll_lock = threading.Lock()
 gateway_update_lock = threading.Lock()
+gateway_command_lock = threading.Lock()
 
 rapid_poll_state_lock = threading.Lock()
 active_rapid_polls = 0
@@ -24,7 +26,9 @@ class BlindNode(udi_interface.Node):
     id = 'levolorblind'
 
     drivers = [
+        {'driver': 'ST', 'value': 0, 'uom': 25},
         {'driver': 'GV4', 'value': 0, 'uom': 51},
+        {'driver': 'GV5', 'value': 0, 'uom': 25},
         {'driver': 'GV1', 'value': 0, 'uom': 51},
         {'driver': 'GV2', 'value': 0, 'uom': 56},
         {'driver': 'GV3', 'value': 0, 'uom': 2},
@@ -42,7 +46,21 @@ class BlindNode(udi_interface.Node):
                 self.blind.Update()
 
             if self.blind.position is not None:
-                self.setDriver('GV4', self.blind.position)
+                position = int(self.blind.position)
+
+                self.setDriver('GV4', position)
+
+                # Binary control state for UD Mobile:
+                # 0-50% = Open/Off, 51-100% = Closed/On.
+                self.setDriver('ST', 0 if position <= 50 else 1)
+
+                # Accurate physical blind state.
+                if position == 0:
+                    self.setDriver('GV5', 0)
+                elif position == 100:
+                    self.setDriver('GV5', 2)
+                else:
+                    self.setDriver('GV5', 1)
 
             if self.blind.battery_level is not None:
                 self.setDriver('GV1', self.blind.battery_level)
@@ -74,7 +92,7 @@ class BlindNode(udi_interface.Node):
 
             LOGGER.info(f'Setting {self.name} to {value}%')
 
-            with gateway_update_lock:
+            with gateway_command_lock:
                 self.blind.Set_position(value)
             self.rapid_poll(value)
 
@@ -152,7 +170,7 @@ class BlindNode(udi_interface.Node):
     def open_blind(self, command=None):
         try:
             LOGGER.info(f'Open requested for {self.name}')
-            with gateway_update_lock:
+            with gateway_command_lock:
                 LOGGER.info(f'Sending Open to {self.name}')
                 self.blind.Open()
             self.rapid_poll(0)
@@ -162,9 +180,15 @@ class BlindNode(udi_interface.Node):
     def close_blind(self, command=None):
         try:
             LOGGER.info(f'Close requested for {self.name}')
-            with gateway_update_lock:
+            with gateway_command_lock:
                 LOGGER.info(f'Sending Close to {self.name}')
+                start_time = time.monotonic()
                 self.blind.Close()
+                elapsed = time.monotonic() - start_time
+                LOGGER.info(
+                    f'Close command completed for {self.name} '
+                    f'in {elapsed:.2f} seconds'
+                )
             self.rapid_poll(100)
         except Exception as err:
             LOGGER.error(f'Error closing {self.name}: {err}')
@@ -173,7 +197,7 @@ class BlindNode(udi_interface.Node):
         try:
             LOGGER.info(f'Stop requested for {self.name}')
 
-            with gateway_update_lock:
+            with gateway_command_lock:
                 LOGGER.info(f'Sending Stop to {self.name}')
                 self.blind.Stop()
 
@@ -288,6 +312,15 @@ class Controller(udi_interface.Node):
 
     def query(self, command=None):
         for node in self.blinds.values():
+
+            with rapid_poll_state_lock:
+                if active_rapid_polls > 0:
+                    LOGGER.debug(
+                        f'Aborting normal poll; '
+                        f'{active_rapid_polls} rapid poll(s) active'
+                    )
+                    return
+
             node.update_status()
 
     commands = {

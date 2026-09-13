@@ -15,7 +15,9 @@
 
   <nodeDef id="levolorblind" nls="levolorblind">
     <sts>
+      <st id="ST" editor="onoff"/>
       <st id="GV4" editor="blindpos"/>
+      <st id="GV5" editor="blindstate"/>
       <st id="GV1" editor="percent"/>
       <st id="GV2" editor="rssi"/>
       <st id="GV3" editor="bool"/>

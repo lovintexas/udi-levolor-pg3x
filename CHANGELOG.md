@@ -2,6 +2,19 @@
 
 All notable changes to the Levolor PG3x plugin will be documented in this file.
 
+## [1.0.5] - 2026-09-13
+
+### Added
+- Added binary `ST` status for UD Mobile switch-widget support.
+- Added `GV5` Blind State with Open, Partially Open, and Closed states.
+- Added separate locking for user commands and background status updates.
+
+### Changed
+- Binary Status reports Open for positions 0-50% and Closed for positions 51-100%.
+- Open, Close, Stop, and Set Position commands are no longer delayed by slow background status queries.
+- Normal whole-blind polling aborts when rapid polling becomes active, improving position-update responsiveness while a blind is moving.
+- Retained standard `DON` and `DOF` command definitions so the UD Mobile Switch Widget operates correctly in both directions.
+
 ## [1.0.4] - 2026-09-13
 
 ### Added
