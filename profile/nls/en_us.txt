@@ -12,9 +12,13 @@ CMD-SET_POS-NAME=Set Position
 CMDP-percent-value-NAME=Target Position
 ND-levolorblind-ICON=GenericCtl
 ND-levolorctrl-ICON=GenericCtl
-CMD-OPEN-NAME=Open
-CMD-CLOSE-NAME=Close
 CMD-STOP-NAME=Stop
 
 CONNECTIONSTATE-0=Not Connected
 CONNECTIONSTATE-1=Connected
+
+CMD-DON-NAME=Close
+CMD-DOF-NAME=Open
+
+BLINDPOS-0=Open
+BLINDPOS-100=Closed

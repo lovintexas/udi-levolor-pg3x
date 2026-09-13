@@ -9,11 +9,15 @@ import udi_interface
 from motionblinds import MotionGateway
 
 LOGGER = udi_interface.LOGGER
-VERSION = "1.0.2"
+VERSION = "1.0.4"
 
 polyglot = udi_interface.Interface([])
 controller = None
 poll_lock = threading.Lock()
+gateway_update_lock = threading.Lock()
+
+rapid_poll_state_lock = threading.Lock()
+active_rapid_polls = 0
 
 
 class BlindNode(udi_interface.Node):
@@ -29,10 +33,13 @@ class BlindNode(udi_interface.Node):
     def __init__(self, polyglot, primary, address, name, blind):
         super().__init__(polyglot, primary, address, name)
         self.blind = blind
+        self._rapid_poll_generation = 0
+        self._rapid_poll_lock = threading.Lock()
 
     def update_status(self):
         try:
-            self.blind.Update()
+            with gateway_update_lock:
+                self.blind.Update()
 
             if self.blind.position is not None:
                 self.setDriver('GV4', self.blind.position)
@@ -67,30 +74,108 @@ class BlindNode(udi_interface.Node):
 
             LOGGER.info(f'Setting {self.name} to {value}%')
 
-            self.blind.Set_position(value)
+            with gateway_update_lock:
+                self.blind.Set_position(value)
+            self.rapid_poll(value)
 
         except Exception as err:
             LOGGER.error(f'Error setting {self.name}: {err}')
 
 
+    def rapid_poll(self, target):
+        # A new movement command invalidates any previous rapid poll
+        # for this same blind.
+        with self._rapid_poll_lock:
+            self._rapid_poll_generation += 1
+            generation = self._rapid_poll_generation
+
+        def worker():
+            global active_rapid_polls
+
+            with rapid_poll_state_lock:
+                active_rapid_polls += 1
+
+            try:
+                # Poll immediately, then every 10 seconds
+                # for up to 3 minutes.
+                for attempt in range(19):
+
+                    # Stop if another movement command has since
+                    # been issued to this same blind.
+                    with self._rapid_poll_lock:
+                        if generation != self._rapid_poll_generation:
+                            LOGGER.info(
+                                f'Rapid polling superseded for {self.name}'
+                            )
+                            return
+
+                    try:
+                        self.update_status()
+
+                        if self.blind.position is not None:
+                            position = int(self.blind.position)
+
+                            LOGGER.info(
+                                f'Rapid poll {self.name}: '
+                                f'position={position}%, target={target}%'
+                            )
+
+                            if position == target:
+                                LOGGER.info(
+                                    f'{self.name} reached target {target}%'
+                                )
+                                return
+
+                    except Exception as err:
+                        LOGGER.error(
+                            f'Rapid poll error for {self.name}: {err}'
+                        )
+
+                    if attempt < 18:
+                        threading.Event().wait(10)
+
+                LOGGER.info(
+                    f'Rapid polling ended for {self.name}; '
+                    f'target {target}% not yet confirmed'
+                )
+
+            finally:
+                with rapid_poll_state_lock:
+                    active_rapid_polls -= 1
+
+        threading.Thread(
+            target=worker,
+            daemon=True,
+            name=f'RapidPoll-{self.address}'
+        ).start()
+
     def open_blind(self, command=None):
         try:
             LOGGER.info(f'Opening {self.name}')
-            self.blind.Open()
+            with gateway_update_lock:
+                self.blind.Open()
+            self.rapid_poll(0)
         except Exception as err:
             LOGGER.error(f'Error opening {self.name}: {err}')
 
     def close_blind(self, command=None):
         try:
             LOGGER.info(f'Closing {self.name}')
-            self.blind.Close()
+            with gateway_update_lock:
+                self.blind.Close()
+            self.rapid_poll(100)
         except Exception as err:
             LOGGER.error(f'Error closing {self.name}: {err}')
 
     def stop_blind(self, command=None):
         try:
             LOGGER.info(f'Stopping {self.name}')
-            self.blind.Stop()
+            with gateway_update_lock:
+                self.blind.Stop()
+
+            # Cancel rapid polling for the previous movement target.
+            with self._rapid_poll_lock:
+                self._rapid_poll_generation += 1
         except Exception as err:
             LOGGER.error(f'Error stopping {self.name}: {err}')
 
@@ -98,9 +183,9 @@ class BlindNode(udi_interface.Node):
         self.update_status()
 
     commands = {
-        'OPEN': open_blind,
-        'CLOSE': close_blind,
         'STOP': stop_blind,
+        'DON': close_blind,
+        'DOF': open_blind,
         'SET_POS': set_position,
         'QUERY': query,
     }
@@ -219,6 +304,14 @@ def poll_handler(poll_type):
 
     if poll_type != 'shortPoll':
         return
+
+    with rapid_poll_state_lock:
+        if active_rapid_polls > 0:
+            LOGGER.debug(
+                f'Skipping normal shortPoll; '
+                f'{active_rapid_polls} rapid poll(s) active'
+            )
+            return
 
     if not poll_lock.acquire(blocking=False):
         LOGGER.warning('Previous blind poll still running; skipping this poll')

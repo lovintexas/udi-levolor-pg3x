@@ -15,7 +15,7 @@
 
   <nodeDef id="levolorblind" nls="levolorblind">
     <sts>
-      <st id="GV4" editor="percent"/>
+      <st id="GV4" editor="blindpos"/>
       <st id="GV1" editor="percent"/>
       <st id="GV2" editor="rssi"/>
       <st id="GV3" editor="bool"/>
@@ -25,9 +25,9 @@
       <sends/>
 
       <accepts>
-        <cmd id="OPEN"/>
-        <cmd id="CLOSE"/>
         <cmd id="STOP"/>
+        <cmd id="DON"/>
+        <cmd id="DOF"/>
         <cmd id="SET_POS">
           <p id="value" editor="percent" init="GV4"/>
         </cmd>

@@ -9,6 +9,10 @@
     <range uom="51" min="0" max="100" step="1"/>
   </editor>
 
+  <editor id="blindpos">
+    <range uom="51" subset="0-100" nls="BLINDPOS"/>
+  </editor>
+
   <editor id="rssi">
     <range uom="56" min="-150" max="0" step="1"/>
   </editor>
