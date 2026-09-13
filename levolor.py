@@ -151,8 +151,9 @@ class BlindNode(udi_interface.Node):
 
     def open_blind(self, command=None):
         try:
-            LOGGER.info(f'Opening {self.name}')
+            LOGGER.info(f'Open requested for {self.name}')
             with gateway_update_lock:
+                LOGGER.info(f'Sending Open to {self.name}')
                 self.blind.Open()
             self.rapid_poll(0)
         except Exception as err:
@@ -160,8 +161,9 @@ class BlindNode(udi_interface.Node):
 
     def close_blind(self, command=None):
         try:
-            LOGGER.info(f'Closing {self.name}')
+            LOGGER.info(f'Close requested for {self.name}')
             with gateway_update_lock:
+                LOGGER.info(f'Sending Close to {self.name}')
                 self.blind.Close()
             self.rapid_poll(100)
         except Exception as err:
@@ -169,13 +171,27 @@ class BlindNode(udi_interface.Node):
 
     def stop_blind(self, command=None):
         try:
-            LOGGER.info(f'Stopping {self.name}')
+            LOGGER.info(f'Stop requested for {self.name}')
+
             with gateway_update_lock:
+                LOGGER.info(f'Sending Stop to {self.name}')
                 self.blind.Stop()
 
-            # Cancel rapid polling for the previous movement target.
+            # Cancel any rapid poll tracking the previous target.
             with self._rapid_poll_lock:
                 self._rapid_poll_generation += 1
+
+            # Refresh the actual stopped position shortly after stopping.
+            def refresh_after_stop():
+                threading.Event().wait(2)
+                self.update_status()
+
+            threading.Thread(
+                target=refresh_after_stop,
+                daemon=True,
+                name=f'StopRefresh-{self.address}'
+            ).start()
+
         except Exception as err:
             LOGGER.error(f'Error stopping {self.name}: {err}')
 
