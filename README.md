@@ -84,6 +84,16 @@ The gateway key can be obtained from the Levolor InMotion app:
 
 Do not share or publicly post the gateway key.
 
+### Understanding Status, Position, and Blind State
+
+Each blind reports three related values:
+
+- **Status (ST):** Binary Open/Closed status. Positions 0-50% report Open; 51-100% report Closed.
+- **Position (GV4):** Actual reported position from 0-100%. 0 displays as Open and 100 as Closed; intermediate positions display as a percentage.
+- **Blind State (GV5):** Physical state of the blind. 0% = Open, 1-99% = Partially Open, and 100% = Closed.
+
+Status is intentionally binary for normal IoX/UD Mobile Open/Close behavior, while Position and Blind State provide more detailed information about the actual blind position.
+
 ## IoX Nodes
 
 The plugin creates one controller node plus one node for each discovered blind.
