@@ -1,5 +1,11 @@
 # Levolor PG3x Plugin
 
+## Documentation
+
+For the full formatted documentation and setup guide:
+
+https://lovintexas.github.io/udi-levolor-pg3x/
+
 A Universal Devices PG3x plugin for local control and monitoring of compatible Levolor motorized blinds through a MotionBlinds gateway.
 
 The plugin communicates locally with the gateway using the Python `motionblinds` library and exposes discovered blinds as nodes in IoX.
