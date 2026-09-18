@@ -71,6 +71,19 @@ After entering both parameters, restart the plugin.
 
 The controller should connect to the gateway and automatically discover the associated blinds.
 
+### Obtaining the Gateway Key
+
+The gateway key can be obtained from the Levolor InMotion app:
+
+1. Open the Levolor InMotion app.
+2. Tap the three dots in the upper-right corner and select **Settings**.
+3. Open **Motion APP About / About MOTION**.
+4. Quickly tap the About screen **five times**.
+5. A popup will display the gateway API key.
+6. Copy the complete key, including the hyphens, and enter it as `gateway_key` in the PG3x Custom Parameters.
+
+Do not share or publicly post the gateway key.
+
 ## IoX Nodes
 
 The plugin creates one controller node plus one node for each discovered blind.
