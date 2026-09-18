@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Levolor PG3x Plugin</title>
+<style>
+:root{
+  --navy:#12345b; --navy2:#0b294b; --ink:#172033; --muted:#5d6878;
+  --line:#dbe2ea; --panel:#f6f8fb; --code:#edf1f5; --white:#fff;
+  --green:#16835d;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:#eef2f6;line-height:1.55}
+.hero{background:linear-gradient(135deg,var(--navy2),var(--navy));color:white;padding:44px 24px}
+.wrap{max-width:1040px;margin:auto}
+.hero h1{margin:0 0 8px;font-size:38px;letter-spacing:-.5px}
+.hero p{margin:0;max-width:780px;color:#e5edf7;font-size:17px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.badge{border:1px solid #ffffff55;background:#ffffff12;border-radius:999px;padding:5px 10px;font-size:13px}
+main{max-width:1040px;margin:24px auto 50px;padding:0 18px}
+.card{background:white;border:1px solid var(--line);border-radius:12px;padding:24px;margin:16px 0;box-shadow:0 2px 8px #24364b0c}
+h2{margin:0 0 16px;color:var(--navy);font-size:23px}
+h3{color:var(--navy);margin:22px 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+ul{padding-left:22px}
+li{margin:6px 0}
+.checks{list-style:none;padding:0}
+.checks li:before{content:"✓";color:var(--green);font-weight:700;margin-right:10px}
+.code{background:var(--code);border:1px solid #d8dee6;border-radius:8px;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;overflow:auto}
+.note{border-left:4px solid var(--navy);background:#f2f6fb;padding:12px 15px;border-radius:4px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{text-align:left;border-bottom:1px solid var(--line);padding:10px 8px;vertical-align:top}
+th{color:var(--navy);background:#f7f9fc}
+a{color:#125aa3}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:12px 20px 40px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.hero h1{font-size:30px}.hero{padding:32px 20px}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>Levolor PG3x Plugin</h1>
+    <p>Local control and monitoring of compatible Levolor motorized blinds through a MotionBlinds gateway, integrated with Universal Devices PG3x and IoX.</p>
+    <div class="badges">
+      <span class="badge">Local gateway control</span>
+      <span class="badge">PG3x</span>
+      <span class="badge">IoX</span>
+      <span class="badge">Python 3</span>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="card">
+<h2>Overview</h2>
+<p>The plugin communicates locally with the gateway using the Python <code>motionblinds</code> library and exposes discovered blinds as nodes in IoX.</p>
+<div class="grid">
+<div>
+<h3>Features</h3>
+<ul class="checks">
+<li>Automatic discovery of connected blinds</li>
+<li>Individual IoX node for each blind</li>
+<li>Set blind position from 0–100%</li>
+<li>Current position reporting</li>
+<li>Battery level reporting</li>
+<li>RSSI reporting</li>
+<li>Blind availability reporting</li>
+<li>IoX programs and integrations</li>
+<li>Local communication with the gateway</li>
+</ul>
+</div>
+<div>
+<h3>Requirements</h3>
+<ul>
+<li>Universal Devices eisy</li>
+<li>PG3x and IoX</li>
+<li>Compatible Levolor motorized blinds</li>
+<li>Levolor/MotionBlinds gateway on the local network</li>
+<li>Python 3</li>
+<li><code>udi-interface</code></li>
+<li><code>motionblinds</code> 0.6.30</li>
+</ul>
+<p>The required Python packages are listed in <code>requirements.txt</code>.</p>
+</div>
+</div>
+<div class="note">Discovered blinds initially receive names such as <strong>Levolor 0001</strong>, <strong>Levolor 0002</strong>, and <strong>Levolor 0003</strong>. You may rename the nodes in IoX; their underlying node addresses remain unchanged.</div>
+</section>
+
+<section class="card">
+<h2>Configuration</h2>
+<p>After installing the plugin, enter the two PG3x Custom Parameters below. The parameter names may be pre-populated by the Plugin Store.</p>
+<table>
+<tr><th>Parameter</th><th>Description</th></tr>
+<tr><td><code>gateway_ip</code></td><td>Local IPv4 address of the Levolor/MotionBlinds gateway.</td></tr>
+<tr><td><code>gateway_key</code></td><td>MotionBlinds API key for the gateway. Do not publish or share the actual key.</td></tr>
+</table>
+<h3>Example</h3>
+<div class="code">gateway_ip = 192.168.1.100<br>gateway_key = your-gateway-key</div>
+<p>It is recommended that the gateway have a DHCP reservation or otherwise maintain a consistent IP address.</p>
+<p>After entering both parameters, restart the plugin. The controller should connect to the gateway and automatically discover the associated blinds.</p>
+</section>
+
+<section class="card">
+<h2>IoX Nodes &amp; Controls</h2>
+<p>The plugin creates one controller node plus one node for each discovered blind.</p>
+<table>
+<tr><th>Item</th><th>Purpose</th></tr>
+<tr><td>Position</td><td>Current blind position from 0–100%.</td></tr>
+<tr><td>Battery</td><td>Reported blind battery level.</td></tr>
+<tr><td>RSSI</td><td>Reported radio signal strength.</td></tr>
+<tr><td>Available</td><td>Indicates whether the blind is currently reachable.</td></tr>
+<tr><td>Set Position</td><td>Commands the blind to a desired position.</td></tr>
+<tr><td>Query</td><td>Requests updated status.</td></tr>
+</table>
+<h3>Position behavior</h3>
+<p>The position reported by a blind may differ slightly from the requested value after movement. For example, a requested position of 20% may subsequently be reported as 21%.</p>
+<h3>Position updates</h3>
+<p>Position commands are sent immediately. Status is refreshed by normal plugin polling, so the displayed position may not update immediately while a blind is physically traveling. This avoids blocking the plugin during movement.</p>
+</section>
+
+<section class="card">
+<h2>Installation &amp; Dependencies</h2>
+<p>This plugin is intended for PG3x on Universal Devices eisy. For development, the repository may be installed using a PG3x Local Store entry in Developer Mode.</p>
+<table>
+<tr><th>Component</th><th>Location</th></tr>
+<tr><td>Executable</td><td><code>levolor.py</code></td></tr>
+<tr><td>IoX profile</td><td><code>profile/</code></td></tr>
+<tr><td>Dependencies</td><td><code>requirements.txt</code></td></tr>
+</table>
+<p>The plugin uses the open-source <code>motionblinds</code> Python library developed by starkillerOG and contributors:</p>
+<p><a href="https://github.com/starkillerOG/motion-blinds">github.com/starkillerOG/motion-blinds</a></p>
+</section>
+
+<section class="card">
+<h2>Security &amp; Compatibility</h2>
+<div class="grid">
+<div>
+<h3>Security</h3>
+<p>The gateway IP address and API key are supplied through PG3x Custom Parameters. Do not hard-code gateway credentials into the plugin source and do not commit gateway keys to a public repository.</p>
+</div>
+<div>
+<h3>Tested configuration</h3>
+<ul>
+<li>PG3x 3.4.x</li>
+<li>IoX 6.x</li>
+<li>Python 3.11</li>
+<li>motionblinds 0.6.30</li>
+<li>Levolor motorized blinds with a compatible MotionBlinds gateway</li>
+</ul>
+<p>Other configurations may work but have not necessarily been tested.</p>
+</div>
+</div>
+</section>
+
+<section class="card">
+<h2>Status</h2>
+<p>This project is under active development. Core functionality tested includes gateway connection, discovery of multiple blinds, position reporting and control, battery and RSSI reporting, availability reporting, and plugin restart/rediscovery.</p>
+<p>Please report issues with the relevant PG3x and IoX versions, gateway type, and plugin logs when possible.</p>
+</section>
+
+<section class="card">
+<h2>Acknowledgments &amp; License</h2>
+<p>This plugin relies on the <code>motionblinds</code> Python library developed by starkillerOG and contributors. MotionBlinds and Levolor product names and trademarks belong to their respective owners.</p>
+<p>This project is licensed under the MIT License. See <code>LICENSE</code> for details.</p>
+</section>
+</main>
+
+<footer>Levolor PG3x Plugin • Documentation</footer>
+</body>
+</html>
