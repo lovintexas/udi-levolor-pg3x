@@ -87,6 +87,28 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:12px 20px 40p
 <div class="note">Discovered blinds initially receive names such as <strong>Levolor 0001</strong>, <strong>Levolor 0002</strong>, and <strong>Levolor 0003</strong>. You may rename the nodes in IoX; their underlying node addresses remain unchanged.</div>
 </section>
 
+
+      <section class="card" id="gateway-key">
+        <h2>Obtaining the Gateway Key</h2>
+        <p>
+          The Levolor InMotion gateway requires a local API key for communication with the plugin.
+          The key can be obtained from the Levolor InMotion app:
+        </p>
+        <ol>
+          <li>Open the <strong>Levolor InMotion</strong> app.</li>
+          <li>Tap the <strong>three dots</strong> in the upper-right corner.</li>
+          <li>Select <strong>Settings</strong>.</li>
+          <li>Open <strong>Motion APP About / About MOTION</strong>.</li>
+          <li><strong>Quickly tap the About screen five times.</strong></li>
+          <li>A popup will display the gateway API key.</li>
+          <li>Copy the complete key, <strong>including the hyphens</strong>.</li>
+          <li>Enter the key as <code>gateway_key</code> in the plugin's PG3x Custom Parameters.</li>
+        </ol>
+        <p class="note">
+          Treat the gateway key as a credential. Do not post it publicly or commit it to a repository.
+        </p>
+      </section>
+
 <section class="card">
 <h2>Configuration</h2>
 <p>After installing the plugin, enter the two PG3x Custom Parameters below. The parameter names may be pre-populated by the Plugin Store.</p>
