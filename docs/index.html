@@ -123,6 +123,67 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:12px 20px 40p
 <p>After entering both parameters, restart the plugin. The controller should connect to the gateway and automatically discover the associated blinds.</p>
 </section>
 
+
+      <section class="card" id="position-reporting">
+        <h2>Understanding Status, Position, and Blind State</h2>
+        <p>
+          Each blind exposes three related values so IoX can provide both conventional
+          Open/Close behavior and an accurate representation of the blind's physical position.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Value</th>
+              <th>How it works</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Status (ST)</strong></td>
+              <td>0–50% = Open; 51–100% = Closed</td>
+              <td>Provides a binary Open/Closed status for normal IoX and UD Mobile controls.</td>
+            </tr>
+            <tr>
+              <td><strong>Position (GV4)</strong></td>
+              <td>Actual reported position from 0–100%. At the endpoints, 0 displays as Open and 100 as Closed.</td>
+              <td>Shows the blind's actual reported position.</td>
+            </tr>
+            <tr>
+              <td><strong>Blind State (GV5)</strong></td>
+              <td>0% = Open; 1–99% = Partially Open; 100% = Closed</td>
+              <td>Provides a human-readable description of the blind's physical state.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Examples</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Actual Position</th>
+              <th>Status</th>
+              <th>Position</th>
+              <th>Blind State</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0%</td><td>Open</td><td>Open</td><td>Open</td></tr>
+            <tr><td>25%</td><td>Open</td><td>25%</td><td>Partially Open</td></tr>
+            <tr><td>50%</td><td>Open</td><td>50%</td><td>Partially Open</td></tr>
+            <tr><td>51%</td><td>Closed</td><td>51%</td><td>Partially Open</td></tr>
+            <tr><td>75%</td><td>Closed</td><td>75%</td><td>Partially Open</td></tr>
+            <tr><td>100%</td><td>Closed</td><td>Closed</td><td>Closed</td></tr>
+          </tbody>
+        </table>
+
+        <p class="note">
+          Status is intentionally binary. Position and Blind State provide the additional
+          detail needed to distinguish a partially open blind from a fully open or fully closed blind.
+        </p>
+      </section>
+
 <section class="card">
 <h2>IoX Nodes &amp; Controls</h2>
 <p>The plugin creates one controller node plus one node for each discovered blind.</p>
