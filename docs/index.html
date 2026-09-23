@@ -200,6 +200,17 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:12px 20px 40p
 <p>The position reported by a blind may differ slightly from the requested value after movement. For example, a requested position of 20% may subsequently be reported as 21%.</p>
 <h3>Position updates</h3>
 <p>Position commands are sent immediately. Status is refreshed by normal plugin polling, so the displayed position may not update immediately while a blind is physically traveling. This avoids blocking the plugin during movement.</p>
+<h3>RSSI and Radio Reliability</h3>
+<p>RSSI indicates the radio signal strength between the blind and the Levolor/MotionBlinds gateway. This is the blind's radio connection to the gateway, not the Wi-Fi or Ethernet signal strength of the gateway itself. RSSI values are negative dBm numbers; values closer to zero indicate a stronger signal.</p>
+<table>
+<tr><th>Approximate RSSI</th><th>Signal Quality</th></tr>
+<tr><td>-50 to -70 dBm</td><td>Strong</td></tr>
+<tr><td>-70 to -85 dBm</td><td>Generally good</td></tr>
+<tr><td>-85 to -95 dBm</td><td>Weak; delayed or missed updates may occur</td></tr>
+<tr><td>Below -95 dBm</td><td>Very weak; communication may be intermittent</td></tr>
+</table>
+<p>A weak RSSI can produce seemingly inconsistent behavior. For example, a blind may receive a command and move correctly while the gateway or plugin does not immediately receive the blind's updated position. The Levolor app and the IoX plugin may therefore temporarily display different positions or availability even though both are communicating with the same gateway.</p>
+<p>If commands work but status updates are delayed, intermittent, or occasionally incorrect, check the RSSI value before assuming there is a plugin problem. Moving the gateway closer to the affected blinds, or reducing walls and other obstructions between the gateway and blinds, may improve reliability.</p>
 </section>
 
 <section class="card">
