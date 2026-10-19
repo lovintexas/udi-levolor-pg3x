@@ -10,7 +10,7 @@ import udi_interface
 from motionblinds import MotionGateway
 
 LOGGER = udi_interface.LOGGER
-VERSION = "1.0.5"
+VERSION = "1.0.6"
 
 polyglot = udi_interface.Interface([])
 controller = None
@@ -221,6 +221,7 @@ class BlindNode(udi_interface.Node):
 
     def query(self, command=None):
         self.update_status()
+        self.reportDrivers()
 
     commands = {
         'STOP': stop_blind,

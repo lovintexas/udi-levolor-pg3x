@@ -2,6 +2,13 @@
 
 All notable changes to the Levolor PG3x plugin will be documented in this file.
 
+## [1.0.6] - 2026-10-19
+
+### Fixed
+- Improved blind node status reporting compatibility with IoX 6.1.2.
+- Explicitly republish node drivers after a Query command.
+- No changes to blind commands or polling behavior.
+
 ## [1.0.5] - 2026-09-13
 
 ### Added
